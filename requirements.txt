@@ -1,0 +1,16 @@
+# vision-KIR — H100, Python 3.12, CUDA driver 12.4
+# torch는 cu124 인덱스로 설치: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0
+torchvision==0.21.0
+ultralytics==8.4.83
+roboflow
+qdrant-client
+open_clip_torch
+onnx
+onnxslim
+onnxruntime          # CPU (onnxruntime-gpu 최신은 CUDA13용이라 driver 12.4와 불일치 → CPU로)
+timm==1.0.27
+easyocr
+numpy==2.4.4
+pyyaml
+pillow

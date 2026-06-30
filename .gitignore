@@ -1,0 +1,25 @@
+# env / secrets
+.env
+
+# python
+venv/
+__pycache__/
+*.pyc
+
+# data (large, downloaded) — code/configs/results는 커밋, 원본 데이터는 제외
+data/datasets/
+data/merged/
+data/fieldset/images/
+data/fieldset/labels/
+
+# training artifacts / weights
+runs/
+*.pt
+*.onnx
+*.engine
+
+# scratch images
+*.jpg
+*.jpeg
+*.png
+!docs/**/*.png
