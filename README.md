@@ -61,6 +61,20 @@ python export/export.py
 - 오류분석([`eval/error_analysis.md`](eval/error_analysis.md)): 미탐(FN) 13, 오탐(FP) 38, 클래스 혼동 0. v1이 목표(mAP@50 ≥ 0.70)를 넘어 v2는 실행하지 않았다.
 - 상세: [`results_detect_v1.md`](eval/results_detect_v1.md) · [`results_authclf.md`](eval/results_authclf.md) · [`results_similarity.md`](eval/results_similarity.md) · [`sample_appraisal.json`](eval/sample_appraisal.json)
 
+### 검출 아키텍처 비교 (CNN vs Transformer)
+
+동일 조건(데이터·split·imgsz 640·80ep·seed 0)으로 RT-DETR을 학습해 비교. 상세: [`eval/results_arch_comparison.md`](eval/results_arch_comparison.md).
+
+| 지표 | YOLO11s (CNN) | RT-DETR-l (Transformer) |
+|---|---|---|
+| mAP@50 | 0.975 | 0.967 |
+| mAP@50-95 | 0.832 | 0.877 |
+| 지연/img | 4.6 ms | 10.3 ms |
+| 학습(80ep) | ~0.25 h | 1.31 h |
+| 파라미터 | ~9.4M | ~32M |
+
+RT-DETR은 엄격 IoU(mAP@50-95)·정밀도에서, YOLO는 mAP@50·속도·학습비용에서 우위. 파라미터가 동급은 아니다(RT-DETR-l이 더 큼). 본 파이프라인은 속도·비용 우위로 YOLO11s를 1차 선택으로 둔다.
+
 ## 한계
 
 - 공개 커뮤니티 데이터(프록시). 라벨 전문가 검증 없음. production 감정기가 아니다.
