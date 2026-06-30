@@ -24,7 +24,9 @@ def roc_auc(y: list, s: list) -> float:
 def main() -> None:
     model = YOLO(str(WEIGHTS))
     names = model.names  # 폴더명 알파벳순: 0=fake, 1=real
-    real_idx = next(k for k, v in names.items() if v == "real")
+    real_idx = next((k for k, v in names.items() if v == "real"), None)
+    if real_idx is None:
+        raise SystemExit(f"'real' 클래스가 모델에 없음: {names}")
     ys, scores, correct, tot, cm = [], [], 0, 0, {}
     for cls_dir in TEST.iterdir():
         if not cls_dir.is_dir():

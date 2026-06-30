@@ -12,6 +12,8 @@ REAL = ROOT / "authclf" / "crops" / "train" / "real"
 
 def main() -> None:
     vecs = [embed(str(p)) for p in sorted(REAL.glob("*.jpg"))]
+    if not vecs:
+        raise SystemExit(f"정품 크롭 없음: {REAL} — authclf/build_crops.py 먼저 실행")
     arr = np.stack(vecs)
     np.savez(ROOT / "embed" / "reference.npz", vecs=arr)
     print(f"[done] reference {arr.shape} → embed/reference.npz")

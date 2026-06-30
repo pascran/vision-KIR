@@ -40,6 +40,9 @@ def read_names(ds_dir: Path) -> dict:
 def process(ds_name: str, obj_type: str, manifest: list) -> None:
     ds_dir = DS / ds_name
     names = read_names(ds_dir)
+    unknown = [n for n in names.values() if authenticity_of(n) == "unknown"]
+    if unknown:
+        print(f"  ⚠️ [{ds_name}] 진위 매핑 안 됨(unknown, 크롭서 제외됨): {unknown} — authenticity_of() 키워드 확인 필요")
     obj_idx = OBJ_TYPES[obj_type]
     n_img = 0
     for split in ("train", "valid", "test"):

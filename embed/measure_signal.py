@@ -32,9 +32,13 @@ def main() -> None:
         for img in (TEST / auth).glob("*.jpg"):
             scores.append(ref.genuine_similarity(str(img), k=5))
             ys.append(1 if auth == "real" else 0)
+    if not ys:
+        raise SystemExit("test crop 없음 — authclf/build_crops.py 먼저 실행")
     auc = roc_auc(ys, scores)
-    real_m = np.mean([s for s, y in zip(scores, ys) if y == 1])
-    fake_m = np.mean([s for s, y in zip(scores, ys) if y == 0])
+    rs = [s for s, y in zip(scores, ys) if y == 1]
+    fs = [s for s, y in zip(scores, ys) if y == 0]
+    real_m = np.mean(rs) if rs else float("nan")
+    fake_m = np.mean(fs) if fs else float("nan")
     verdict = "유의미한 triage 신호" if auc >= 0.65 else "약한 신호(분리 거의 안 됨)"
     lines = ["# 유사도 triage 신호 (test 신발 crop)\n",
              f"- n = {len(ys)}",

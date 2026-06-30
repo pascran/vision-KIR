@@ -22,8 +22,8 @@ def embed(img) -> np.ndarray:
     """path(str/Path) 또는 PIL.Image → L2 정규화 512-d 벡터."""
     m, pre = load()
     if isinstance(img, (str, Path)):
-        img = Image.open(img).convert("RGB")
-    x = pre(img.convert("RGB")).unsqueeze(0).to(_DEV)
+        img = Image.open(img)
+    x = pre(img.convert("RGB")).unsqueeze(0).to(_DEV)  # PIL 입력도 커버 — 한 번만 변환
     with torch.no_grad():
         v = m.encode_image(x)
         v = v / v.norm(dim=-1, keepdim=True)

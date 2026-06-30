@@ -67,7 +67,11 @@ python export/export.py
 - 신발 Nike AF1/AJ1 brand bias — 타 브랜드 일반화 불가.
 - "fake"는 데이터셋 출처 라벨 — 박스 기반 검출이 위조성을 직접 학습하지 않음(그래서 2-stage).
 - 유사도 신호는 CLIP ViT-B/32 기반 약한 triage — DINOv2/SigLIP가 업그레이드 경로.
-- val/test split은 자체 생성(원본 셋엔 없음).
+- val/test split은 자체 생성(원본 셋엔 없음). 정확한 split은 [`data/split_manifest.json`](data/split_manifest.json)으로 고정·커밋.
+
+## 재현성
+- 시드 고정(`seed=0` + ultralytics `deterministic=True`로 cudnn 결정성), `requirements.txt` 버전 핀, split manifest 커밋.
+- 단 **완전 비트단위 재현은 보장 안 됨**: Roboflow 데이터 버전·CUDA 12.4·GPU 커널 비결정성으로 소수점 변동 가능. mAP/AUC는 동일 환경에서 ±0.01 내 재현 목표.
 
 ## 기술 스택
 `PyTorch` · `Ultralytics YOLO11` · `CLIP(open_clip)` · `Qdrant` · `easyOCR` · `ONNX` · H100(cu124)

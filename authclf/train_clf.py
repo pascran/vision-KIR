@@ -12,7 +12,7 @@ CROPS = ROOT / "authclf" / "crops"
 def main() -> None:
     model = YOLO("yolo11s-cls.pt")
     model.train(data=str(CROPS), epochs=int(os.environ.get("EPOCHS", "30")),
-                imgsz=224, device=0, seed=0,
+                imgsz=224, device=0, seed=0, deterministic=True,
                 project=str(ROOT / "runs"), name="authclf_v1", exist_ok=True)
 
 

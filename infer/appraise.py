@@ -38,15 +38,19 @@ def main() -> None:
     for b in r.boxes:
         cls = names[int(b.cls)]
         xyxy = [int(v) for v in b.xyxy[0].tolist()]
-        crop = pil.crop(tuple(xyxy))
         entry = {"object": cls, "bbox": xyxy, "det_conf": round(float(b.conf), 3)}
+        if xyxy[2] - xyxy[0] < 2 or xyxy[3] - xyxy[1] < 2:  # 0-area crop 건너뜀
+            findings.append(entry)
+            continue
+        crop = pil.crop(tuple(xyxy))
         txt = reader.readtext(np.array(crop), detail=0)
         if txt:
             entry["ocr"] = txt
         if cls == "shoe" and clf is not None:
             p = clf.predict(crop, verbose=False)[0].probs
-            ri = next(k for k, v in clf.names.items() if v == "real")
-            entry["authenticity"] = {"pred": clf.names[int(p.top1)], "p_real": round(float(p.data[ri]), 3)}
+            ri = next((k for k, v in clf.names.items() if v == "real"), None)
+            if ri is not None:
+                entry["authenticity"] = {"pred": clf.names[int(p.top1)], "p_real": round(float(p.data[ri]), 3)}
             if ref is not None:
                 entry["genuine_similarity"] = round(ref.genuine_similarity(crop), 3)
         findings.append(entry)

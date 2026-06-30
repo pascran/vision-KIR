@@ -24,8 +24,9 @@ def main() -> None:
     for i, ci in enumerate(m.box.ap_class_index):
         cid = int(ci)
         cname = names[cid] if isinstance(names, (list, dict)) else str(cid)
+        # p/r/ap50/ap 모두 ap_class_index 위치 i로 정렬됨 — maps[cid](클래스ID 인덱싱)는 sparse 클래스에서 어긋남
         lines.append(f"- **{cname}**: P={m.box.p[i]:.3f} R={m.box.r[i]:.3f} "
-                     f"AP50={m.box.ap50[i]:.3f} AP50-95={m.box.maps[cid]:.3f}")
+                     f"AP50={m.box.ap50[i]:.3f} AP50-95={m.box.ap[i]:.3f}")
     out = ROOT / "eval" / f"results_{RUN}.md"
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))

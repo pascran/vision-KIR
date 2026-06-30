@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Phase 1-c: leakage-safe split.
 
-- aHash 근접중복 제거.
+- aHash 동일-aHash 중복 제거.
 - Roboflow 증강 복제(같은 source, '.rf.' 앞 stem 동일)는 한 그룹으로 묶어 같은 split에만 들어가게 → train/val leakage 차단.
 - source-group 단위 70/20/10 split(원본 데이터셋엔 val/test가 사실상 없어 직접 생성).
 - 통합 data.yaml(nc:2, names:[logo,shoe]) 작성.
@@ -21,6 +21,8 @@ ALL = DATA / "merged" / "all"
 MERGED = DATA / "merged"
 
 
+# 주의: 8x8 aHash 정확일치(threshold 없음) — 동일/거의동일 복제만 제거. 미세변형 near-dup은
+# source-group(.rf. stem) 묶기로 leakage 차단. SSIM 임계 방식은 향후 개선 여지.
 def ahash(path: Path, size: int = 8) -> int:
     img = Image.open(path).convert("L").resize((size, size))
     px = list(img.getdata())
@@ -35,7 +37,7 @@ def source_key(uid: str) -> str:
 def main() -> None:
     manifest = [json.loads(l) for l in (MERGED / "manifest.jsonl").read_text().splitlines() if l.strip()]
 
-    # 1) 근접중복 제거 (동일 aHash)
+    # 1) 동일-aHash 중복 제거 (동일 aHash)
     seen, kept = set(), []
     for m in manifest:
         h = ahash(ALL / "images" / m["image"])
@@ -43,7 +45,7 @@ def main() -> None:
             continue
         seen.add(h)
         kept.append(m)
-    print(f"[dedup] {len(manifest)} → {len(kept)} (근접중복 {len(manifest) - len(kept)} 제거)")
+    print(f"[dedup] {len(manifest)} → {len(kept)} (동일-aHash 중복 {len(manifest) - len(kept)} 제거)")
 
     # 2) source-group 으로 묶기
     groups = defaultdict(list)

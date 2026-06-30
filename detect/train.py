@@ -23,6 +23,7 @@ def main() -> None:
         batch=int(os.environ.get("BATCH", "32")),
         device=0,
         seed=0,
+        deterministic=True,  # cudnn 결정성 + 전역 시드 (ultralytics가 처리)
         project=str(ROOT / "runs"),
         name=os.environ.get("RUN", "detect_v1"),
         exist_ok=True,
