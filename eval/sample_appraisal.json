@@ -18,7 +18,11 @@
         "pred": "fake",
         "p_real": 0.036
       },
-      "genuine_similarity": 0.887
+      "genuine_similarity_triage": {
+        "score": 0.887,
+        "reliable": false,
+        "note": "정품 레퍼런스 유사도. 측정 AUC 0.647(무작위 수준)이라 판정 근거로 사용하지 말 것."
+      }
     },
     {
       "object": "shoe",
@@ -33,7 +37,11 @@
         "pred": "fake",
         "p_real": 0.005
       },
-      "genuine_similarity": 0.898
+      "genuine_similarity_triage": {
+        "score": 0.898,
+        "reliable": false,
+        "note": "정품 레퍼런스 유사도. 측정 AUC 0.647(무작위 수준)이라 판정 근거로 사용하지 말 것."
+      }
     }
   ],
   "note": "프록시 데모 — 커뮤니티 라벨(전문가 검증 아님), Nike 한정. verdict 아닌 1차 판독근거."

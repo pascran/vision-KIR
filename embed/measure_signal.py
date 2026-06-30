@@ -39,7 +39,7 @@ def main() -> None:
     fs = [s for s, y in zip(scores, ys) if y == 0]
     real_m = np.mean(rs) if rs else float("nan")
     fake_m = np.mean(fs) if fs else float("nan")
-    verdict = "유의미한 triage 신호" if auc >= 0.65 else "약한 신호(분리 거의 안 됨)"
+    verdict = "유의미한 triage 신호" if auc >= 0.65 else "활용 불가(무작위 수준) — 판정 근거로 사용 금지"
     lines = ["# 유사도 triage 신호 (test 신발 crop)\n",
              f"- n = {len(ys)}",
              f"- 정품유사도 평균: real={real_m:.4f} vs fake={fake_m:.4f}",

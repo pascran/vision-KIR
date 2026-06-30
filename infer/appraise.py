@@ -52,7 +52,11 @@ def main() -> None:
             if ri is not None:
                 entry["authenticity"] = {"pred": clf.names[int(p.top1)], "p_real": round(float(p.data[ri]), 3)}
             if ref is not None:
-                entry["genuine_similarity"] = round(ref.genuine_similarity(crop), 3)
+                entry["genuine_similarity_triage"] = {
+                    "score": round(ref.genuine_similarity(crop), 3),
+                    "reliable": False,
+                    "note": "정품 레퍼런스 유사도. 측정 AUC 0.647(무작위 수준)이라 판정 근거로 사용하지 말 것.",
+                }
         findings.append(entry)
     out = {"image": Path(img_path).name, "size": [W, H], "findings": findings,
            "note": "프록시 데모 — 커뮤니티 라벨(전문가 검증 아님), Nike 한정. verdict 아닌 1차 판독근거."}
