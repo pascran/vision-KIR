@@ -1,0 +1,40 @@
+{
+  "image": "shoes__train__fake100_jpg.rf.52b5af273b37377d50530774eb7840f4.jpg",
+  "size": [
+    640,
+    640
+  ],
+  "findings": [
+    {
+      "object": "shoe",
+      "bbox": [
+        11,
+        3,
+        489,
+        449
+      ],
+      "det_conf": 0.868,
+      "authenticity": {
+        "pred": "fake",
+        "p_real": 0.036
+      },
+      "genuine_similarity": 0.887
+    },
+    {
+      "object": "shoe",
+      "bbox": [
+        198,
+        72,
+        491,
+        420
+      ],
+      "det_conf": 0.333,
+      "authenticity": {
+        "pred": "fake",
+        "p_real": 0.005
+      },
+      "genuine_similarity": 0.898
+    }
+  ],
+  "note": "프록시 데모 — 커뮤니티 라벨(전문가 검증 아님), Nike 한정. verdict 아닌 1차 판독근거."
+}

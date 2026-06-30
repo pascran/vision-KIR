@@ -48,11 +48,19 @@ python infer/appraise.py sample.jpg
 python export/export.py
 ```
 
-## 결과 (실측)
-<!-- 평가 후 채움: 검출 mAP@50/50-95, per-class, 진위 분류 AUC, 유사도 분리 AUC, ONNX 지연 -->
-- 검출(test): _학습 후 기재_
-- 진위 분류(신발): _기재_
-- 유사도 triage AUC: _기재 (verdict 아닌 triage 신호)_
+## 결과 (실측, test split)
+| 단계 | 지표 | 값 |
+|---|---|---|
+| **Stage1 검출** (YOLO11s) | mAP@50 / mAP@50-95 | **0.975 / 0.832** (logo AP50 0.968, shoe 0.982, 클래스 혼동 0) |
+| **Stage2 진위 분류** (신발 crop) | accuracy / ROC-AUC | **0.792 / 0.879** (workhorse 신호) |
+| **Stage3 유사도 triage** | ROC-AUC | **0.647** (real-sim 0.869 vs fake-sim 0.847 → ★약한 신호, verdict 아닌 triage) |
+| **최적화** | 지연/img | PyTorch 4.6ms · **TensorRT FP16 4.4ms** · ONNX(CPU) 199.7ms |
+- 오류분석([`eval/error_analysis.md`](eval/error_analysis.md)): 미탐(FN) 13(대형 10/소형 3), 오탐(FP) 38, 클래스 혼동 0. v1이 목표(mAP@50≥0.70) 초과 → v2 미실행, 약점은 문서화.
+- 상세: [`eval/results_detect_v1.md`](eval/results_detect_v1.md) · [`results_authclf.md`](eval/results_authclf.md) · [`results_similarity.md`](eval/results_similarity.md) · 샘플 판독근거 [`eval/sample_appraisal.json`](eval/sample_appraisal.json)
+
+> **읽은 것**: 진위는 **분류기(AUC 0.879)가 주 신호**, CLIP 유사도(0.647)는 약한 보조 — 측정해보니 "같은 제품/포즈"는 잡아도 진짜/가짜 미세차는 잘 못 가린다(예측된 CLIP 한계). 과장하지 않고 측정값 그대로 보고.
+
+> ⚠️ **실전 함정**: ultralytics `export(format='engine')`는 **TensorRT를 자동 설치하며 torch를 cu124→cu130으로 업그레이드** → torchvision/cuDNN과 mismatch나 다른 스크립트가 깨진다. **TRT export는 마지막에/격리 venv에서** 하고, 끝나면 `torch==2.6.0+cu124` force-reinstall로 복원.
 
 ## 한계 (정직)
 - 공개 커뮤니티 데이터 = 프록시. 라벨 전문가 검증 없음. production 감정기 아님.
